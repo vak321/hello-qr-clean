@@ -20,7 +20,7 @@ const FLOATERS = Array.from({ length: 18 }).map((_, i) => {
   return {
     left: rand(1) * 100,
     top: rand(2) * 100,
-    size: 5 + rand(3) * 9, // rem
+    size: 5 + rand(3) * 9,
     duration: 10 + rand(4) * 16,
     delay: -rand(5) * 20,
     dx: (rand(6) - 0.5) * 60,
@@ -95,11 +95,11 @@ function Index() {
 
       {/* Hidden YouTube player attempting autoplay */}
       <iframe
-        src={`https://www.youtube.com/embed/${YT_VIDEO_ID}?autoplay=1&controls=0&playsinline=1&modestbranding=1`}
+        src={`https://www.youtube.com/embed/${YT_VIDEO_ID}?autoplay=1&controls=0&playsinline=1&modestbranding=1&mute=0`}
         title="Sign of the Times"
         allow="autoplay; encrypted-media"
-        className="pointer-events-none absolute h-px w-px opacity-0"
-        style={{ left: -9999, top: -9999 }}
+        className="pointer-events-none absolute"
+        style={{ width: 1, height: 1, opacity: 0.01, top: 0, left: 0 }}
       />
 
       {/* Message */}
