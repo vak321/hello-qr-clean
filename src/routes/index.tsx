@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef } from "react";
 import floaterImg from "@/assets/floater.png";
 import bgImg from "@/assets/bg.png";
-import song from "@/assets/sign_of_the_times.mp3";
+import song from "@/assets/Sign of the Times.mp3";
 
 export const Route = createFileRoute("/")({
   head: () => ({
