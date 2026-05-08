@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import floaterImg from "@/assets/floater.png";
 import bgImg from "@/assets/bg.png";
 
@@ -34,8 +34,47 @@ const FLOATERS = Array.from({ length: 18 }).map((_, i) => {
 // Harry Styles - Sign of the Times (official video)
 const YT_VIDEO_ID = "qN4ooNx77u0";
 
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
+
 function Index() {
   const [playing, setPlaying] = useState(false);
+  const playerRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!document.getElementById("yt-api-script")) {
+      const tag = document.createElement("script");
+      tag.id = "yt-api-script";
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
+
+    window.onYouTubeIframeAPIReady = () => {
+      playerRef.current = new window.YT.Player("yt-player", {
+        videoId: YT_VIDEO_ID,
+        playerVars: { autoplay: 0, controls: 0, playsinline: 1, modestbranding: 1 },
+        events: {
+          onReady: () => {
+            playerRef.current?.playVideo();
+            setPlaying(true);
+          },
+        },
+      });
+    };
+
+    if (window.YT && window.YT.Player) {
+      window.onYouTubeIframeAPIReady();
+    }
+  }, []);
+
+  const handlePlay = () => {
+    playerRef.current?.playVideo();
+    setPlaying(true);
+  };
 
   return (
     <div
@@ -96,16 +135,12 @@ function Index() {
         ))}
       </div>
 
-      {/* Hidden YouTube player */}
-      {playing && (
-        <iframe
-          src={`https://www.youtube.com/embed/${YT_VIDEO_ID}?autoplay=1&controls=0&playsinline=1&modestbranding=1&mute=0`}
-          title="Sign of the Times"
-          allow="autoplay; encrypted-media"
-          className="pointer-events-none absolute"
-          style={{ width: 1, height: 1, opacity: 0.01, top: 0, left: 0 }}
-        />
-      )}
+      {/* YouTube Player API target */}
+      <div
+        id="yt-player"
+        className="pointer-events-none absolute"
+        style={{ width: 1, height: 1, opacity: 0.01, top: 0, left: 0 }}
+      />
 
       {/* Message */}
       <main className="relative z-10 flex min-h-screen flex-col items-center justify-center gap-8 px-6 text-center">
@@ -122,7 +157,7 @@ function Index() {
 
         {!playing && (
           <button
-            onClick={() => setPlaying(true)}
+            onClick={handlePlay}
             style={{
               marginTop: "1.5rem",
               padding: "0.9rem 2.5rem",
