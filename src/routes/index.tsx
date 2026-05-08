@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import floaterImg from "@/assets/floater.png";
 import bgImg from "@/assets/bg.png";
 
@@ -20,7 +21,7 @@ const FLOATERS = Array.from({ length: 18 }).map((_, i) => {
   return {
     left: rand(1) * 100,
     top: rand(2) * 100,
-    size: 5 + rand(3) * 9,
+    size: 5 + rand(3) * 9, // rem
     duration: 10 + rand(4) * 16,
     delay: -rand(5) * 20,
     dx: (rand(6) - 0.5) * 60,
@@ -34,6 +35,8 @@ const FLOATERS = Array.from({ length: 18 }).map((_, i) => {
 const YT_VIDEO_ID = "qN4ooNx77u0";
 
 function Index() {
+  const [playing, setPlaying] = useState(false);
+
   return (
     <div
       className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-zinc-950 via-zinc-900 to-black"
@@ -93,14 +96,16 @@ function Index() {
         ))}
       </div>
 
-      {/* Hidden YouTube player attempting autoplay */}
-      <iframe
-        src={`https://www.youtube.com/embed/${YT_VIDEO_ID}?autoplay=1&controls=0&playsinline=1&modestbranding=1&mute=0`}
-        title="Sign of the Times"
-        allow="autoplay; encrypted-media"
-        className="pointer-events-none absolute"
-        style={{ width: 1, height: 1, opacity: 0.01, top: 0, left: 0 }}
-      />
+      {/* Hidden YouTube player */}
+      {playing && (
+        <iframe
+          src={`https://www.youtube.com/embed/${YT_VIDEO_ID}?autoplay=1&controls=0&playsinline=1&modestbranding=1&mute=0`}
+          title="Sign of the Times"
+          allow="autoplay; encrypted-media"
+          className="pointer-events-none absolute"
+          style={{ width: 1, height: 1, opacity: 0.01, top: 0, left: 0 }}
+        />
+      )}
 
       {/* Message */}
       <main className="relative z-10 flex min-h-screen flex-col items-center justify-center gap-8 px-6 text-center">
@@ -114,6 +119,26 @@ function Index() {
         >
           riprenditi veloce coglione
         </h1>
+
+        {!playing && (
+          <button
+            onClick={() => setPlaying(true)}
+            style={{
+              marginTop: "1.5rem",
+              padding: "0.9rem 2.5rem",
+              fontSize: "1.3rem",
+              fontWeight: "bold",
+              borderRadius: "9999px",
+              border: "none",
+              background: "linear-gradient(135deg, #fff 0%, #aaa 100%)",
+              color: "#000",
+              cursor: "pointer",
+              boxShadow: "0 4px 24px rgba(255,255,255,0.25)",
+            }}
+          >
+            ▶ Ascolta
+          </button>
+        )}
       </main>
     </div>
   );
